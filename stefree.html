@@ -687,17 +687,17 @@
       <button>File</button>
       <ul>
         <li onmousedown="window.open(window.location.href,'_blank');">Create<span>Ctrl + Shift + C</span></li>
-        <li onmousedown="load.click();"><input id="load" type="file">Load<span>Ctrl + Shift + L</span></li>
+        <li onmousedown="load.click();"><input id="load" type="file">Load<span>Purchase STE Pro</span></li>
         <li onmousedown="saveAs();"><a id="save"></a>Save<span>Ctrl + Shift + S</span></li>
         <li>Save As...
           <svg><use href="#arrow"/></svg>
           <ul>
             <li onmousedown="saveAs('txt');">Plain Text<span>.txt</span></li>
             <li onmousedown="saveAs('html');">HTML<span>.html</span></li>
-            <li onmousedown="saveAs('css');">CSS<span>.css</span></li>
-            <li onmousedown="saveAs('js');">JavaScript<span>.js</span></li>
-            <li onmousedown="saveAs('json');">JSON<span>.json</span></li>
-            <li onmousedown="saveAs('svg');">SVG<span>.svg</span></li>
+            <li onmousedown="saveAs('css');">CSS<span>Purchase STE Pro</span></li>
+            <li onmousedown="saveAs('js');">JavaScript<span>Purchase STE Pro</span></li>
+            <li onmousedown="saveAs('json');">JSON<span>Purchase STE Pro</span></li>
+            <li onmousedown="saveAs('svg');">SVG<span>Purchase STE Pro</span></li>
           </ul>
         </li>
       </ul>
@@ -707,18 +707,18 @@
       <ul>
         <li onmousedown="changeView('default');">Default<span>Ctrl + Shift + 1</span></li>
         <li onmousedown="changeView('code');">Code<span>Ctrl + Shift + 2</span></li>
-        <li onmousedown="changeView('split');">Split<span>Ctrl + Shift + 3</span></li>
+        <li onmousedown="changeView('split');">Split<span>Purchase STE Pro</span></li>
         <li onmousedown="changeView('preview');">Preview<span>Ctrl + Shift + 4</span></li>
-        <li onmousedown="changeOrientation();">Orientation<span>Ctrl + Shift + 5</span></li>
-        <li onmousedown="openDisplay();">Display<span>Ctrl + Shift + 6</span></li>
+        <li onmousedown="changeOrientation();">Orientation<span>Purchase STE Pro</span></li>
+        <li onmousedown="openDisplay();">Display<span>Purchase STE Pro</span></li>
       </ul>
     </div>
     <div class="dropdown">
       <button>Tools</button>
       <ul>
-        <li onmousedown="openWidget('replacer');">Replace Text<span>Ctrl + Shift + F</span></li>
-        <li onmousedown="openWidget('picker');">Color Picker<span>Ctrl + Shift + K</span></li>
-        <li onmousedown="confirmOverwrite(insertTemplate);">Import HTML Template<span>Ctrl + Shift + H</span></li>
+        <li onmousedown="openWidget('replacer');">Replace Text<span>Purchase STE Pro</span></li>
+        <li onmousedown="openWidget('picker');">Color Picker<span>Purchase STE Pro</span></li>
+        <li onmousedown="confirmOverwrite(insertTemplate);">Import HTML Template<span>Purchase STE Pro</span></li>
         <li>Online Resources...
           <svg><use href="#arrow"/></svg>
           <ul>
@@ -826,9 +826,6 @@
       if (event.key == "C"){
         window.open(window.location.href,"_blank");
       }
-      if (event.key == "L"){
-        load.click();
-      }
       if (event.key == "S"){
         saveAs();
       }
@@ -838,26 +835,8 @@
       if (event.key == "@"){
         changeView("code");
       }
-      if (event.key == "#"){
-        changeView("split");
-      }
       if (event.key == "$"){
         changeView("preview");
-      }
-      if (event.key == "%"){
-        changeOrientation();
-      }
-      if (event.key == "^"){
-        openDisplay();
-      }
-      if (event.key == "F"){
-        openWidget("replacer");
-      }
-      if (event.key == "K"){
-        openWidget("picker");
-      }
-      if (event.key == "H"){
-        confirmOverwrite(insertTemplate);
       }
     }
   });
