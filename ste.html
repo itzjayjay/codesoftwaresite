@@ -807,7 +807,9 @@
 
 <script>
   var view = "default", orientation = "horizontal", loadedFile = undefined, sourceChange = false, mustSave = false, storedColor;
-  window.addEventListener("load",function(){
+ changeView("code");
+ changeView("code");
+ window.addEventListener("load",function(){
     if (window == window.parent){
       userInput.focus();
     } else {
