@@ -826,51 +826,43 @@
   window.addEventListener("keydown",function(event){
     if (event.ctrlKey){
       if (event.key == "C"){
+       event.preventDefault();
         window.open(window.location.href,"_blank");
       }
       if (event.key == "L"){
+       event.preventDefault();
         load.click();
-        event.preventDefault();
       }
       if (event.key == "S"){
+       event.preventDefault();
         saveAs();
-       event.preventDefault();
       }
-      if (event.key == "!"){
+      if (event.key == "!"){event.preventDefault();
         changeView("default");
-       event.preventDefault();
       }
-      if (event.key == "@"){
+      if (event.key == "@"){event.preventDefault();
         changeView("code");
-       event.preventDefault();
       }
-      if (event.key == "#"){
+      if (event.key == "#"){event.preventDefault();
         changeView("split");
-       event.preventDefault();
       }
-      if (event.key == "$"){
+      if (event.key == "$"){event.preventDefault();
         changeView("preview");
-       event.preventDefault();
       }
-      if (event.key == "%"){
+      if (event.key == "%"){event.preventDefault();
         changeOrientation();
-       event.preventDefault();
       }
-      if (event.key == "^"){
+      if (event.key == "^"){event.preventDefault();
         openDisplay();
-       event.preventDefault();
       }
-      if (event.key == "F"){
+      if (event.key == "F"){event.preventDefault();
         openWidget("replacer");
-       event.preventDefault();
       }
-      if (event.key == "K"){
+      if (event.key == "K"){event.preventDefault();
         openWidget("picker");
-       event.preventDefault();
       }
-      if (event.key == "H"){
+      if (event.key == "H"){event.preventDefault();
         confirmOverwrite(insertTemplate);
-       event.preventDefault();
       }
     }
   });
