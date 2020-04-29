@@ -821,6 +821,8 @@
       event.returnValue = "Changes you made may not be saved.";
     }
   });
+
+ preventDefault = preventDefault || stopPropagation;
   window.addEventListener("keydown",function(event){
     if (event.ctrlKey){
       if (event.key == "C"){
@@ -828,36 +830,47 @@
       }
       if (event.key == "L"){
         load.click();
+        event.preventDefault();
       }
       if (event.key == "S"){
         saveAs();
+       event.preventDefault();
       }
       if (event.key == "!"){
         changeView("default");
+       event.preventDefault();
       }
       if (event.key == "@"){
         changeView("code");
+       event.preventDefault();
       }
       if (event.key == "#"){
         changeView("split");
+       event.preventDefault();
       }
       if (event.key == "$"){
         changeView("preview");
+       event.preventDefault();
       }
       if (event.key == "%"){
         changeOrientation();
+       event.preventDefault();
       }
       if (event.key == "^"){
         openDisplay();
+       event.preventDefault();
       }
       if (event.key == "F"){
         openWidget("replacer");
+       event.preventDefault();
       }
       if (event.key == "K"){
         openWidget("picker");
+       event.preventDefault();
       }
       if (event.key == "H"){
         confirmOverwrite(insertTemplate);
+       event.preventDefault();
       }
     }
   });
