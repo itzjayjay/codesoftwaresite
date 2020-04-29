@@ -823,46 +823,49 @@
     }
   });
 
- preventDefault = preventDefault || stopPropagation;
+ prevent = function(e){
+  e.preventDefault();
+  e.stopPropagation();
+ };
   window.addEventListener("keydown",function(event){
     if (event.ctrlKey){
       if (event.key == "C"){
-       event.preventDefault();
+       prevent(event);
         window.open(window.location.href,"_blank");
       }
       if (event.key == "L"){
-       event.preventDefault();
+       prevent(event);
         load.click();
       }
       if (event.key == "S"){
-       event.preventDefault();
+       prevent(event);
         saveAs();
       }
-      if (event.key == "!"){event.preventDefault();
+      if (event.key == "!"){prevent(event);
         changeView("default");
       }
-      if (event.key == "@"){event.preventDefault();
+      if (event.key == "@"){prevent(event);
         changeView("code");
       }
-      if (event.key == "#"){event.preventDefault();
+      if (event.key == "#"){prevent(event);
         changeView("split");
       }
-      if (event.key == "$"){event.preventDefault();
+      if (event.key == "$"){prevent(event);
         changeView("preview");
       }
-      if (event.key == "%"){event.preventDefault();
+      if (event.key == "%"){prevent(event);
         changeOrientation();
       }
-      if (event.key == "^"){event.preventDefault();
+      if (event.key == "^"){prevent(event);
         openDisplay();
       }
-      if (event.key == "F"){event.preventDefault();
+      if (event.key == "F"){prevent(event);
         openWidget("replacer");
       }
-      if (event.key == "K"){event.preventDefault();
+      if (event.key == "K"){prevent(event);
         openWidget("picker");
       }
-      if (event.key == "H"){event.preventDefault();
+      if (event.key == "H"){prevent(event);
         confirmOverwrite(insertTemplate);
       }
     }
@@ -873,7 +876,7 @@
     }
   });
   document.documentElement.addEventListener("dragover",function(event){
-    event.preventDefault();
+    prevent(event);
     userInput.classList.add("drag");
     event.dataTransfer.dropEffect = "copy";
   });
@@ -881,7 +884,7 @@
     userInput.classList.remove("drag");
   });
   document.documentElement.addEventListener("drop",function(event){
-    event.preventDefault();
+    prevent(event);
     userInput.classList.remove("drag");
     if (event.dataTransfer.types.includes("Files")){
       load.files = event.dataTransfer.files;
