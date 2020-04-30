@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html
+<html>
+
 <head>
 
 <title>Smart Text Editor</title>
@@ -807,9 +808,7 @@
 
 <script>
   var view = "default", orientation = "horizontal", loadedFile = undefined, sourceChange = false, mustSave = false, storedColor;
- changeView("code");
- changeView("code");
- window.addEventListener("load",function(){
+  window.addEventListener("load",function(){
     if (window == window.parent){
       userInput.focus();
     } else {
@@ -822,50 +821,47 @@
       event.returnValue = "Changes you made may not be saved.";
     }
   });
-
- prevent = function(e){
+function blockKeypress(e){
   e.preventDefault();
   e.stopPropagation();
- };
+}
   window.addEventListener("keydown",function(event){
     if (event.ctrlKey){
       if (event.key == "C"){
-       prevent(event);
+blockKeypress(event);
         window.open(window.location.href,"_blank");
       }
-      if (event.key == "L"){
-       prevent(event);
+      if (event.key == "L"){blockKeypress(event);
         load.click();
       }
-      if (event.key == "S"){
-       prevent(event);
+      if (event.key == "S"){blockKeypress(event);
         saveAs();
       }
-      if (event.key == "!"){prevent(event);
+      if (event.key == "!"){blockKeypress(event);
         changeView("default");
       }
-      if (event.key == "@"){prevent(event);
+      if (event.key == "@"){blockKeypress(event);
         changeView("code");
       }
-      if (event.key == "#"){prevent(event);
+      if (event.key == "#"){blockKeypress(event);
         changeView("split");
       }
-      if (event.key == "$"){prevent(event);
+      if (event.key == "$"){blockKeypress(event);
         changeView("preview");
       }
-      if (event.key == "%"){prevent(event);
+      if (event.key == "%"){blockKeypress(event);
         changeOrientation();
       }
-      if (event.key == "^"){prevent(event);
+      if (event.key == "^"){blockKeypress(event);
         openDisplay();
       }
-      if (event.key == "F"){prevent(event);
+      if (event.key == "F"){blockKeypress(event);
         openWidget("replacer");
       }
-      if (event.key == "K"){prevent(event);
+      if (event.key == "K"){blockKeypress(event);
         openWidget("picker");
       }
-      if (event.key == "H"){prevent(event);
+      if (event.key == "H"){blockKeypress(event);
         confirmOverwrite(insertTemplate);
       }
     }
@@ -876,7 +872,7 @@
     }
   });
   document.documentElement.addEventListener("dragover",function(event){
-    prevent(event);
+    event.preventDefault();
     userInput.classList.add("drag");
     event.dataTransfer.dropEffect = "copy";
   });
@@ -884,7 +880,7 @@
     userInput.classList.remove("drag");
   });
   document.documentElement.addEventListener("drop",function(event){
-    prevent(event);
+    event.preventDefault();
     userInput.classList.remove("drag");
     if (event.dataTransfer.types.includes("Files")){
       load.files = event.dataTransfer.files;
@@ -1114,7 +1110,7 @@
     }
   }
   function insertTemplate(){
-    userInput.value = decodeURI("%3C!DOCTYPE%20html%3E%0A%3Chtml%3E%0A%0A%3Chead%3E%0A%0A%3Ctitle%3E%3C/title%3E%0A%3Cmeta%20charset=%22UTF-8%22%3E%0A%3Cmeta%20name=%22viewport%22%20content=%22width=device-width,%20initial-scale=1.0%22%3E%0A%3Clink%20rel=%22icon%22%20type=%22%22%20href=%22%22%3E%0A%0A%3Cstyle%3E%0A%20%20*%20%7B%0A%20%20%20%20margin:%200;%0A%20%20%20%20padding:%200;%0A%20%20%20%20box-sizing:%20border-box;%0A%20%20%20%20font-family:%20sans-serif;%0A%20%20%7D%0A%20%20body%20%7B%0A%20%20%20%20width:%20100vw;%0A%20%20%20%20height:%20100vh;%0A%20%20%7D%0A%3C/style%3E%0A%0A%3C/head%3E%0A%0A%3Cbody%3E%0A%0A%3Cmain%3E%0A%3C/main%3E%0A%0A%3Cscript%3E%0A%3C/script%3E%0A%0A%3C/body%3E%0A%0A%3C/html%3E");
+    userInput.value = unescape("%3C!DOCTYPE%20html%3E%0A%3Chtml%3E%0A%3Chead%3E%0A%0A%3Ctitle%3E%3C%2Ftitle%3E%0A%3Cmeta%20name%3D%22viewport%22%20content%3D%22width%3Ddevice-width%2C%20initial-scale%3D1.0%22%3E%0A%3Clink%20rel%3D%22icon%22%20%0A%20%20%20%20%20%20type%3D%22%22%0A%20%20%20%20%20%20href%3D%22%22%3E%0A%3Cstyle%3E%0A%20%20*%20%7B%0A%20%20%20%20margin%3A%200%3B%0A%20%20%20%20padding%3A%200%3B%0A%20%20%20%20box-sizing%3A%20border-box%3B%0A%20%20%20%20font-family%3A%20sans-serif%3B%0A%20%20%7D%0A%20%20body%20%7B%0A%20%20%20%20width%3A%20100vw%3B%0A%20%20%20%20height%3A%20100vh%3B%0A%20%20%7D%0A%3C%2Fstyle%3E%0A%3C%2Fhead%3E%0A%3Cbody%3E%0A%0A%0A%0A%3C%2Fbody%3E%0A%3Cscript%3E%0A%0A%0A%0A%3C%2Fscript%3E%0A%3C%2Fhtml%3E");
     sourceChange = true;
     changeView("split");
   }
