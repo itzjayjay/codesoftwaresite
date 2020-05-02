@@ -1261,11 +1261,8 @@ userInput.focus();
 setInterval(function(){
   if(context.style.opacity == 0){
     setTimeout(function(){
-      context.style.display = "none";
+      context.style.top = 100000000+"pc";
     },300);
-  }else{
-    
-    context.style.display = "block";
   }
 },0);
 
