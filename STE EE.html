@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Smart Text Editor - Edge Edition</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAEJQTFRFAAAA23yI1dXV0VdmzERVji87ycnJw8PDtz1M86xN8JQar6+viIiI7ogA1noApl8A5c+t3sGW2rqKKioqxKd8mIJgbs8VzwAAABZ0Uk5TAP///////////////////////////1SBjaMAAAA8SURBVHicY2DABxgZUflMzCysKHw2dg5kAU4udm4eFD4vHzqfn4p8AXS+oBAKn0FYSEQUxQfCwqh8dAAASZYC5vJ/xd8AAAAASUVORK5CYII=">
+
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Arial", sans-serif;
+  }
+  :root {
+    --container-dark: #171717;
+    --container-medium: #1c1c1c;
+    --container-medium-hover: #2c2c2c;
+    --container-light: #ffffff;
+
+    --text-dark: #aaaaaa;
+    --text-medium: #cccccc;
+    --text-info: #777777;
+    --text-light: #ffffff;
+    --text-hover: #ffffff;
+
+    --button-medium: #3a3a3a;
+    --button-medium-hover: #4a4a4a;
+  }
+  body {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    user-select: none;
+  }
+  button {
+    width: min(11vw, 75px);
+    height: min(5vw, 20px);
+    color: var(--text-dark);
+    font-size: min(3.5vw, 14px);
+    background: var(--button-medium);
+    border: none;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.75);
+    cursor: pointer;
+    outline: none;
+    transition: color 0.125s ease, background 0.125s ease, width 0s;
+  }
+  button:hover, .dropdown button:focus {
+    color: var(--text-hover);
+    background: var(--button-medium-hover);
+  }
+  textarea, input[type="text"] {
+    font-size: 13px;
+    border: none;
+    outline: none;
+  }
+  textarea {
+    white-space: pre;
+    resize: none;
+  }
+  label {
+    color: var(--text-dark);
+    font-size: min(3.5vw, 14px);
+  }
+  input[type="range"] {
+    margin-bottom: min(1vw, 4px);
+    height: min(5vw, 20px);
+    background: none;
+    cursor: pointer;
+    outline: none;
+    -webkit-appearance: none;
+  }
+  input[type="range"]:last-child {
+    margin-bottom: 0;
+  }
+  ::-webkit-slider-thumb {
+    margin-top: -7px;
+    width: min(2.75vw, 12px);
+    height: min(5vw, 20px);
+    background: var(--button-medium);
+    border: none;
+    border-radius: min(1vw, 4px);
+    box-shadow: 0 min(0.5vw, 2px) min(2vw, 8px) rgba(0,0,0,0.75);
+    transition: background 0.125s ease;
+    -webkit-appearance: none;
+  }
+  ::-webkit-slider-runnable-track {
+    height: min(1.5vw, 6px);
+    background: var(--container-medium);
+    border-radius: min(0.5vw, 2px);
+    box-shadow: 0 min(0.5vw, 2px) min(2vw, 8px) rgba(0,0,0,0.75);
+    transition: background 0.125s ease;
+  }
+  :hover::-webkit-slider-thumb {
+    background: var(--button-medium-hover);
+  }
+  :hover::-webkit-slider-runnable-track {
+    background: var(--container-medium-hover);
+  }
+  ::-webkit-scrollbar {
+    width: min(3vw, 12px);
+    height: min(3vw, 12px);
+  }
+  ::-webkit-scrollbar-track, #userInput::-webkit-scrollbar-corner {
+    background: none;
+  }
+  ::-webkit-scrollbar-thumb {
+    width: min(9vw, 36px);
+    height: min(9vw, 36px);
+    background-clip: content-box;
+    background-color: #7a7a7a;
+    border: min(0.5vw, 2px) solid transparent;
+    border-radius: min(4vw, 16px);
+  }
+  #svg {
+    position: absolute;
+  }
+  #header {
+    padding: 0 min(1.5vw, 10px);
+    position: relative;
+    height: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--container-dark);
+    z-index: 2;
+    transition: box-shadow 0.5s ease;
+  }
+  #header.default, #header.code, #header.split {
+    box-shadow: 0 1px 8px rgba(0,0,0,0.75);
+  }
+  #header.split.vertical {
+    box-shadow: -50vw 1px 8px rgba(0,0,0,0.75);
+  }
+  #header.preview {
+    box-shadow: none;
+  }
+  #header.resize, #userInput.resize, #preview.resize {
+    pointer-events: none;
+    transition: none;
+  }
+  #header .toolbar {
+    display: flex;
+  }
+  #header .toolbar > * {
+    margin: 0 min(0.75vw, 6px);
+  }
+  #header .toolbar > :first-child {
+    margin-left: 0;
+  }
+  #header .toolbar > :last-child {
+    margin-right: 0;
+  }
+  #header .title {
+    position: absolute;
+    left: calc(50% - 75px);
+    width: 150px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: left 0.5s ease;
+  }
+  #header .title svg {
+    width: 24px;
+    height: 24px;
+  }
+  #header .title section {
+    color: var(--text-dark);
+    font-size: 16px;
+    white-space: nowrap;
+    transform-origin: left center;
+    transition: all 0.5s ease, left 0s;
+  }
+  @media (max-width: 900px){
+    #header .title {
+      left: calc(50% - 12px);
+    }
+    #header .title svg {
+      margin: 0;
+    }
+    #header .title section {
+      opacity: 0;
+      transform: scaleX(0);
+    }
+  }
+  #header .attribution {
+    max-width: 35%;
+    display: flex;
+    text-align: right;
+    transition: font-size 0.5s ease;
+  }
+  #header .attribution span, #header .attribution a {
+    color: var(--text-dark);
+    font-size: min(2vw, 14px);
+    transition: color 0.125s ease;
+  }
+  #header .attribution a:hover {
+    color: var(--text-hover);
+  }
+  #main {
+    position: relative;
+    flex: 1;
+    background: #111111;
+  }
+  #main.horizontal.resize {
+    cursor: row-resize;
+  }
+  #main.vertical.resize {
+    cursor: col-resize;
+  }
+  #userInput {
+    position: absolute;
+    left: 0;
+    top: 0;
+    border: 4px solid;
+    transition: all 0.5s ease;
+  }
+  #userInput.default {
+    --size: 100%;
+    color: #000000;
+    background: #e5e2c9;
+    border-color: #e5e2c9;
+  }
+  #userInput.code, #userInput.split, #userInput.preview {
+    color: var(--text-light);
+    font-family: monospace;
+    background: #1d1d1d;
+    border-color: #1d1d1d;
+  }
+  #userInput.code {
+    --size: 100%;
+  }
+  #userInput.split {
+    --size: calc(50% - 8px);
+  }
+  #userInput.preview {
+    --size: 0;
+    opacity: 0;
+  }
+  #userInput.horizontal, #preview.horizontal {
+    width: 100%;
+    height: var(--size);
+  }
+  #userInput.vertical, #preview.vertical {
+    width: var(--size);
+    height: 100%;
+  }
+  #userInput.drag {
+    border-color: #0000ff;
+    transition: all 0.25s ease;
+  }
+  #userInput.default.drag {
+    color: #000080;
+    background: #aaaaea;
+  }
+  #userInput.code.drag, #userInput.split.drag, #userInput.preview.drag {
+    color: #7f7fff;
+    background: #161656;
+  }
+  #scaler {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--button-medium);
+    box-shadow: 0 -1px 8px rgba(0,0,0,0.75);
+    transition: all 0.5s ease, background 0.125s ease;
+  }
+  #scaler.active, #scaler:hover {
+    background: var(--button-medium-hover);
+    transition: background 0.125s ease;
+  }
+  #scaler.default, #scaler.code {
+    --axis: 0;
+    --size: 0;
+    opacity: 0;
+  }
+  #scaler.split {
+    --axis: calc(50% - 8px);
+    --size: 16px;
+  }
+  #scaler.preview {
+    --axis: 100%;
+    --size: 0;
+    opacity: 0;
+  }
+  #scaler.horizontal {
+    bottom: var(--axis);
+    width: 100%;
+    height: var(--size);
+    cursor: row-resize;
+    --rotate: rotate(0deg);
+  }
+  #scaler.vertical {
+    right: var(--axis);
+    width: var(--size);
+    height: 100%;
+    cursor: col-resize;
+    --rotate: rotate(90deg);
+  }
+  #scaler .handle {
+    padding: min(0.5vw, 2px);
+    color: var(--text-dark);
+    font-size: min(2.75vw, 12px);
+    background: var(--button-medium);
+    border-radius: min(1vw, 4px);
+    box-shadow: 0 0 min(2vw, 8px) min(0.25vw, 1px) rgba(0,0,0,0.75);
+    opacity: 0;
+    z-index: 1;
+    transform: scale(0) var(--rotate);
+    transform-origin: center center;
+    transition: color 0.125s ease, background 0.125s ease, opacity 0.125s ease, transform 0.125s ease;
+  }
+  #scaler.active > .handle, #scaler:hover > .handle {
+    color: var(--text-hover);
+    background: var(--button-medium-hover);
+    opacity: 1;
+    transform: scale(1) var(--rotate);
+  }
+  #preview {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    background: var(--container-light);
+    border: none;
+    transition: all 0.5s ease;
+  }
+  #preview.default, #preview.code {
+    --size: 0;
+    opacity: 0;
+  }
+  #preview.split {
+    --size: calc(50% - 8px);
+  }
+  #preview.preview {
+    --size: 100%;
+  }
+  #dialog {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    pointer-events: none;
+    z-index: 2;
+    animation: dialog 2s;
+    transition: all 0.25s ease;
+  }
+  #dialog.active {
+    backdrop-filter: blur(4px);
+    pointer-events: all;
+  }
+  #dialog.onload {
+    animation: dialog-onload 2s;
+  }
+  @keyframes dialog-onload {
+    10%, 90% {
+      backdrop-filter: blur(4px);
+    }
+  }
+  #dialog.onload > #welcome {
+    animation: dialog-item-onload 2s;
+  }
+  @keyframes dialog-item-onload {
+    0% {
+      transform: scale(0);
+    }
+    15%, 85% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    100% {
+      transform: translateY(calc(50vh + 50%));
+    }
+  }
+  .dropdown ul {
+    position: absolute;
+    min-width: min(35vw, 155px);
+    background: var(--container-medium);
+    border-radius: min(1vw, 4px);
+    box-shadow: 0 min(0.5vw, 2px) min(1vw, 4px) rgba(0,0,0,0.75);
+    z-index: 1;
+    opacity: 0;
+    pointer-events: none;
+    list-style: none;
+    transform: scaleY(0);
+    transform-origin: top center;
+    transition: opacity 0.125s ease, transform 0.125s ease;
+  }
+  .dropdown li {
+    padding: min(1.75vw, 8px);
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-medium);
+    font-size: min(2.75vw, 12px);
+    border-radius: min(1vw, 4px);
+    white-space: nowrap;
+    cursor: pointer;
+    transition: color 0.125s ease, background 0.125s ease;
+  }
+  .dropdown li span {
+    margin-left: min(4vw, 16px);
+    color: var(--text-info);
+    font-size: min(2.5vw, 11px);
+  }
+  .dropdown li svg {
+    width: 5px;
+    height: 5px
+    fill: var(--text-info);
+    transition: fill 0.125s ease;
+  }
+  .dropdown li input[type="file"], .dropdown li a {
+    display: none;
+  }
+  .dropdown li:hover {
+    color: var(--text-hover);
+    background: var(--container-medium-hover);
+  }
+  .dropdown li:hover > svg {
+    fill: var(--text-hover);
+  }
+  .dropdown ul ul {
+    position: absolute;
+    left: 100%;
+    top: 0;
+    transform: scaleX(0);
+    transform-origin: left center;
+  }
+  .dropdown button:focus + ul, .dropdown li:hover > ul {
+    opacity: 1;
+    pointer-events: all;
+    transform: scale(1);
+  }
+  @media (max-width: 550px), (max-height: 350px){
+    .dropdown ul ul {
+      min-width: 100%;
+      max-height: min(24vh, 60px);
+      left: 0;
+      top: 100%;
+      transform: scaleY(0);
+      transform-origin: top center;
+      overflow-y: auto;
+    }
+    .dropdown li svg {
+      transform: rotate(90deg);
+    }
+  }
+  @media (max-height: 225px){
+    .dropdown ul {
+      max-height: 60vh;
+      overflow-y: auto;
+    }
+    .dropdown ul ul {
+      max-height: initial;
+      overflow-y: initial;
+    }
+  }
+  .widget {
+    margin: min(1.5vw, 10px);
+    padding: min(1.5vw, 10px);
+    position: absolute;
+    right: 0;
+    top: 100%;
+    min-width: 180px;
+    max-height: calc(100vh - 60px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--container-dark);
+    border-radius: min(1vw, 4px);
+    box-shadow: 0 min(0.5vw, 2px) min(1vw, 4px) rgba(0,0,0,0.75);
+    opacity: 0;
+    pointer-events: none;
+    overflow-y: auto;
+    transform: scaleY(0);
+    transform-origin: top center;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+  .widget.active {
+    opacity: 1;
+    pointer-events: all;
+    transform: scaleY(1);
+  }
+  .widget div {
+    display: flex;
+  }
+  .widget .header {
+    margin-bottom: min(1.5vw, 10px);
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+  }
+  .widget .header section {
+    color: var(--text-dark);
+    font-size: min(4vw, 16px);
+  }
+  .widget .header svg {
+    position: absolute;
+    right: min(2.75vw, 12px);
+    width: min(2.75vw, 12px);
+    height: min(2.75vw, 12px);
+    fill: #aaaaaa;
+    cursor: pointer;
+    transition: fill 0.125s ease;
+  }
+  .widget .header svg:hover {
+    fill: var(--text-hover);
+  }
+  .widget .content {
+    width: 100%;
+    min-height: 40px;
+    justify-content: space-around;
+    overflow-y: auto;
+  }
+  .widget .content .item {
+    margin: auto 0;
+    flex-direction: column;
+    align-items: center;
+  }
+  .widget .content .item.expand {
+    width: 100%;
+  }
+  .widget textarea, .widget input[type="text"] {
+    padding: 4px;
+    color: var(--text-light);
+    background: #212121;
+    border-radius: min(1vw, 4px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.75) inset;
+  }
+  #header.code > .widget textarea, #header.split > .widget textarea, #header.preview > .widget input[type="text"], #header.code > .widget input[type="text"], #header.split > .widget input[type="text"], #header.preview > .widget input[type="text"] {
+    font-family: monospace;
+  }
+  .widget textarea {
+    margin-bottom: min(1.5vw, 10px);
+    width: 100%;
+    height: 75px;
+    min-height: 40px;
+  }
+  .widget textarea:last-child {
+    margin-bottom: 0;
+  }
+  #colorPreview {
+    margin-bottom: min(1.5vw, 10px);
+    min-width: min(21.5vw, 86px);
+    min-height: min(21.5vw, 86px);
+    border-radius: min(1vw, 4px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.75) inset;
+  }
+  #colorInput {
+    width: min(21.5vw, 86px);
+  }
+  .widget .toolbar {
+    margin-top: min(1.5vw, 10px);
+  }
+  .widget .toolbar > * {
+    margin: 0 min(0.75vw, 6px);
+  }
+  .widget .toolbar > button {
+    width: min(15vw, 75px);
+  }
+  .widget .toolbar > :first-child {
+    margin-left: 0;
+  }
+  .widget .toolbar > :last-child {
+    margin-right: 0;
+  }
+  .dialog-item {
+    padding: min(6vh, 2vw);
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    background: #101010;
+    border-radius: min(3vh, 1vw);
+    box-shadow: 0 min(0.75vh, 0.25vw) min(0.75vh, 0.25vw) rgba(0,0,0,0.75);
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.25s ease;
+  }
+  .dialog-item.active {
+    opacity: 1;
+    transform: scale(1);
+  }
+  .dialog-item .header {
+    margin-bottom: min(5.25vh, 1.75vw);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .dialog-item .header .icon {
+    margin: 0 min(1.5vh, 0.5vw);
+    width: min(15vh, 5vw);
+    height: min(15vh, 5vw);
+  }
+  .dialog-item .header section {
+    margin: 0 min(1.5vh, 0.5vw);
+    color: var(--text-light);
+    font-size: min(9vh, 3vw);
+  }
+  .dialog-item .header .close {
+    position: absolute;
+    right: min(2.75vw, 12px);
+    width: min(2.75vw, 12px);
+    height: min(2.75vw, 12px);
+    fill: #aaaaaa;
+    cursor: pointer;
+    transition: fill 0.125s ease;
+  }
+  .dialog-item .header .close:hover {
+    fill: var(--text-hover);
+  }
+  .dialog-item .content {
+    display: flex;
+    flex-direction: column;
+  }
+  .dialog-item .content span {
+    color: var(--text-dark);
+    font-size: min(4.5vh, 1.5vw);
+    text-align: center;
+  }
+
+.ctxMenu {
+  width: 120px;
+  height: 120px;
+  background: var(--container-dark);
+  position:fixed;
+  top:0;left:0;
+  z-index: 4;
+  transition: 0.3s ease opacity;
+  opacity: 0;
+  color: var(--text-dark);
+  cursor:pointer;
+  border-radius: 5px;
+}
+.ctxMenu span {
+  float: right;
+  color: var(--text-info);
+  font-size: 10px;
+  line-height:20px;
+}
+.ctxMenu div {
+  position:relative;
+  height:40px;
+  width:100%;
+  padding:5px;
+  border-radius: 5px;
+}
+
+.ctxMenu div:hover {
+  transition: 0.2s ease all;
+  background: var(--button-medium-hover);
+  color: var(--text-light);
+}
+</style>
+
+</head>
+
+<body oncontextmenu="return false;">
+
+<svg id="svg">
+  <symbol id="pencil" viewBox="0 0 512 512">
+    <defs>
+      <linearGradient id="wood" x1="-22.662" x2="-32.039" y1="-27.117" y2="-27.117" gradientTransform="matrix(-9.3466 -9.3775 9.3775 -9.3466 0 0)" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#e5cfad" offset="0"/>
+        <stop stop-color="#dec196" offset="0.25"/>
+        <stop stop-color="#daba8a" offset="0.5"/>
+        <stop stop-color="#c4a77c" offset="0.75"/>
+        <stop stop-color="#988260" offset="1"/>
+      </linearGradient>
+      <linearGradient id="paint" x1="22.338" x2="31.811" y1="15.409" y2="15.409" gradientTransform="matrix(9.4412 9.4724 -9.4724 9.4412 0 0)" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#f3ac4d" offset="0"/>
+        <stop stop-color="#f0941a" offset="0.25"/>
+        <stop stop-color="#ee8800" offset="0.5"/>
+        <stop stop-color="#d67a00" offset="0.75"/>
+        <stop stop-color="#a65f00" offset="1"/>
+      </linearGradient>
+      <linearGradient id="metal" x1="22.267" x2="31.751" y1="-8.6537" y2="-8.6537" gradientTransform="matrix(9.4527 9.484 -9.484 9.4527 0 0)" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#d5d5d5" offset="0"/>
+        <stop stop-color="#c9c9c9" offset="0.25"/>
+        <stop stop-color="#c3c3c3" offset="0.5"/>
+        <stop stop-color="#afafaf" offset="0.75"/>
+        <stop stop-color="#888888" offset="1"/>
+      </linearGradient>
+      <linearGradient id="eraser" x1="22.164" x2="31.683" y1="-14.141" y2="-14.141" gradientTransform="matrix(9.4872 9.5187 -9.5187 9.4872 0 0)" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#db7c88" offset="0"/>
+        <stop stop-color="#d15766" offset="0.25"/>
+        <stop stop-color="#cc4455" offset="0.5"/>
+        <stop stop-color="#b73d4c" offset="0.75"/>
+        <stop stop-color="#8e2f3b" offset="1"/>
+      </linearGradient>
+    </defs>
+    <path d="m170.77 428.71-168.7 81.953 81.054-169.89z" fill="url(#wood)"/>
+    <path d="m54.396 484.82-52.657 25.846 25.566-53.027z" fill="#2a2a2a"/>
+    <path d="m314.47 108.52c-9.7304 9.7626 2.2127 37.574 26.676 62.118 24.463 24.544 52.182 36.527 61.913 26.764l-231.03 231.8c-9.7304 9.7626-37.45-2.2201-61.913-26.764-24.463-24.544-36.406-52.355-26.676-62.118z" fill="url(#paint)"/>
+    <path d="m365.73 56.454c-9.827 9.8595 2.2347 37.947 26.94 62.734 24.706 24.788 52.7 36.889 62.527 27.03l-55.137 55.319c-9.827 9.8595-37.821-2.2421-62.527-27.03-24.706-24.788-36.767-52.875-26.94-62.734z" fill="url(#metal)"/>
+    <path d="m417.17 4.7679c-9.8787 9.9114 2.2886 38.189 27.176 63.159 24.888 24.97 53.072 37.178 62.95 27.266l-54.165 54.344c-9.8787 9.9114-38.063-2.2962-62.95-27.266-24.888-24.97-37.055-53.247-27.176-63.159z" fill="url(#eraser)"/>
+    <path d="m417.17 4.7679c9.8787-9.9114 38.063 2.2962 62.95 27.266 24.888 24.97 37.055 53.247 27.176 63.159s-38.062-2.2962-62.95-27.266c-24.888-24.97-37.055-53.247-27.176-63.159z" fill="#db7c88"/>
+  </symbol>
+  <symbol id="arrow" viewBox="0 0 512 512">
+    <path d="m112.66 0 286.68 256-286.68 256z"/>
+  </symbol>
+  <symbol id="close" viewBox="0 0 512 512">
+    <path d="m1.5795 65.78 64.201-64.201 190.22 190.22 190.22-190.22 64.201 64.201-190.22 190.22 190.22 190.22-64.201 64.201-190.22-190.22-190.22 190.22-64.201-64.201 190.22-190.22z"/>
+  </symbol>
+</svg>
+
+<header id="header" class="default horizontal">
+  <div class="toolbar">
+    <div class="dropdown">
+      <button>File</button>
+      <ul>
+        <li onmousedown="window.open(window.location.href,'_blank');">Create<span>Ctrl + Shift + C</span></li>
+        <li onmousedown="load.click();"><input id="load" type="file">Load<span>Ctrl + Shift + L</span></li>
+        <li onmousedown="saveAs();"><a id="save"></a>Save<span>Ctrl + Shift + S</span></li>
+        <li>Save As...
+          <svg><use href="#arrow"/></svg>
+          <ul>
+            <li onmousedown="saveAs('txt');">Plain Text<span>.txt</span></li>
+            <li onmousedown="saveAs('html');">HTML<span>.html</span></li>
+            <li onmousedown="saveAs('css');">CSS<span>.css</span></li>
+            <li onmousedown="saveAs('js');">JavaScript<span>.js</span></li>
+            <li onmousedown="saveAs('json');">JSON<span>.json</span></li>
+            <li onmousedown="saveAs('svg');">SVG<span>.svg</span></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <div class="dropdown">
+      <button>View</button>
+      <ul>
+        <li onmousedown="changeView('default');">Default<span>Ctrl + Shift + 1</span></li>
+        <li onmousedown="changeView('code');">Code<span>Ctrl + Shift + 2</span></li>
+        <li onmousedown="changeView('split');">Split<span>Ctrl + Shift + 3</span></li>
+        <li onmousedown="changeView('preview');">Preview<span>Ctrl + Shift + 4</span></li>
+        <li onmousedown="changeOrientation();">Orientation<span>Ctrl + Shift + 5</span></li>
+        <li onmousedown="openDisplay();">Display<span>Ctrl + Shift + 6</span></li>
+      </ul>
+    </div>
+    <div class="dropdown">
+      <button>Tools</button>
+      <ul>
+        <li onmousedown="openWidget('replacer');">Replace Text<span>Ctrl + Shift + F</span></li>
+        <li onmousedown="openWidget('picker');">Color Picker<span>Ctrl + Shift + K</span></li>
+        <li onmousedown="confirmOverwrite(insertTemplate);">Import HTML Template<span>Ctrl + Shift + H</span></li>
+        <li>Online Resources...
+          <svg><use href="#arrow"/></svg>
+          <ul>
+            <li onmousedown="window.open('https://www.diffchecker.com/','_blank');">Difference Finder</li>
+            <li onmousedown="window.open('https://htmlformatter.com/','_blank');">HTML Formatter</li>
+            <li onmousedown="window.open('http://jsonviewer.stack.hu/','_blank');">JSON Formatter</li>
+            <li onmousedown="window.open('https://www.svgminify.com/','_blank');">SVG Simplifier</li>
+            <li onmousedown="window.open('https://www.uuidgenerator.net/','_blank');">UUID Generator</li>
+            <li onmousedown="window.open('https://cryptii.com/','_blank');">Text Encryptor</li>
+            <li onmousedown="window.open('https://keycode.info/','_blank');">Keycode Finder</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="title">
+    <svg><use href="#pencil"/></svg>
+    <section>STE Edge Edition</section>
+  </div>
+  <div class="attribution">
+    <span>Inspired by <a href="https://htmledit.squarefree.com/" target="_blank">Real-Time HTML Editor</a> and <a href="https://www.editpad.org/" target="_blank">Edit Pad</a>!</span>
+  </div>
+  <div id="replacer" class="widget">
+    <div class="header">
+      <section>Replace Text</section>
+      <svg onmousedown="closeWidget('replacer');"><use href="#close"></use></svg>
+    </div>
+    <div class="content">
+      <div class="item expand">
+        <textarea id="locate" placeholder="Text to locate..." spellcheck="false"></textarea>
+        <textarea id="modify" placeholder="Replace with..." spellcheck="false"></textarea>
+      </div>
+    </div>
+    <div class="toolbar">
+      <button onmouseup="activateReplacer();">Replace</button>
+      <button onmouseup="flipReplacer();">Flip</button>
+      <button onmouseup="clearReplacer();">Clear</button>
+    </div>
+  </div>
+  <div id="picker" class="widget">
+    <div class="header">
+      <section>Color Picker</section>
+      <svg onmousedown="closeWidget('picker');"><use href="#close"></use></svg>
+    </div>
+    <div class="content">
+      <div class="item">
+        <span id="colorPreview"></span>
+        <input id="colorInput" type="text" value="#ff7f00" maxlength="7" spellcheck="false" autocomplete="off">
+      </div>
+      <div class="item">
+        <label for="red">Red</label>
+        <input id="red" type="range" min="0" max="255" oninput="channelRefresh();">
+        <label for="green">Green</label>
+        <input id="green" type="range" min="0" max="255" oninput="channelRefresh();">
+        <label for="blue">Blue</label>
+        <input id="blue" type="range" min="0" max="255" oninput="channelRefresh();">
+      </div>
+    </div>
+    <div class="toolbar">
+      <button onmouseup="copyPicker();">Copy</button>
+      <button onmouseup="insertPicker();">Insert</button>
+      <button onmouseup="deletePicker();">Delete</button>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="horizontal">
+  <textarea id="userInput" class="default horizontal" placeholder="Welcome to the Smart Text Editor! This site was created to allow for easy text editing and HTML development within your browser!" spellcheck="false"></textarea>
+  <div id="scaler" class="default horizontal">
+    <div onselectstart="return false;" class="handle">▲<br>▼</div>
+  </div>
+  <iframe id="preview" class="default horizontal" src="about:blank"></iframe>
+</main>
+
+<div id="dialog" class="onload">
+  <div id="welcome" class="dialog-item onload">
+    <div class="header">
+      <svg class="icon"><use href="#pencil"/></svg>
+      <section>Smart Text Editor - Edge Edition</section>
+    </div>
+    <div class="content">
+      <span>Welcome to the Smart Text Editor! Edge Edition!</span>
+      <span>Created by Brandon Bennett</span>
+      <span>Made compatible by Jacob McGinley</span>
+    </div>
+  </div>
+</div>
+
+<div class="ctxMenu">
+
+<div onmousedown="copy();" id="copy">Copy<span>Ctrl+C</span></div>
+<div onmousedown="paste();" id="paste">Paste<span>Ctrl+V</span></div>
+<div onmousedown="cut();" id="cut">Cut<span>Ctrl+X</span></div>
+
+</div>
+
+<script>
+  var view = "default", orientation = "horizontal", loadedFile = undefined, sourceChange = false, mustSave = false, storedColor;
+  changeView("code");
+  window.addEventListener("load",function(){
+    if (window == window.parent){
+      userInput.focus();
+    } else {
+      dialog.classList.remove("onload");
+    }
+    colorInputRefresh();
+  });
+  window.addEventListener("beforeunload",function(){
+    if (window == window.parent && mustSave == true){
+      event.returnValue = "Changes you made may not be saved.";
+    }
+  });
+function blockKeypress(e){
+  e.preventDefault();
+  e.stopPropagation();
+  return false;
+}
+  window.addEventListener("keydown",function(event){
+    if (event.ctrlKey){
+      if (event.key == "C"){blockKeypress(event);
+        window.open(window.location.href,"_blank");
+      }
+      if (event.key == "L"){blockKeypress(event);
+        load.click();
+      }
+      if (event.key == "S"){blockKeypress(event);
+        saveAs();
+      }
+      if (event.key == "!"){blockKeypress(event);
+        changeView("default");
+      }
+      if (event.key == "@"){blockKeypress(event);
+        changeView("code");
+      }
+      if (event.key == "#"){blockKeypress(event);
+        changeView("split");
+      }
+      if (event.key == "$"){blockKeypress(event);
+        changeView("preview");
+      }
+      if (event.key == "%"){blockKeypress(event);
+        changeOrientation();
+      }
+      if (event.key == "^"){blockKeypress(event);
+        openDisplay();
+      }
+      if (event.key == "F"){blockKeypress(event);
+        openWidget("replacer");
+      }
+      if (event.key == "K"){blockKeypress(event);
+        openWidget("picker");
+      }
+      if (event.key == "H"){blockKeypress(event);
+        confirmOverwrite(insertTemplate);
+      }
+    }
+  });
+  window.addEventListener("resize",function(){
+    if (view == "split"){
+      changeView("split");
+    }
+  });
+  document.documentElement.addEventListener("dragover",function(event){
+    event.preventDefault();
+    userInput.classList.add("drag");
+    event.dataTransfer.dropEffect = "copy";
+  });
+  document.documentElement.addEventListener("dragleave",function(){
+    userInput.classList.remove("drag");
+  });
+  document.documentElement.addEventListener("drop",function(event){
+    event.preventDefault();
+    userInput.classList.remove("drag");
+    if (event.dataTransfer.types.includes("Files")){
+      load.files = event.dataTransfer.files;
+      confirmOverwrite(importFile,event);
+    } else {
+      textEdit("insert",event.dataTransfer.getData("text"));
+    }
+  });
+  userInput.addEventListener("input",function(){
+    sourceChange = true;
+    mustSave = true;
+    if (view == "split" || view == "preview"){
+      previewRefresh();
+    }
+  });
+  scaler.addEventListener("mousedown",function(){
+    toggleScaling();
+    document.body.addEventListener("mousemove",setScaling);
+    document.body.addEventListener("mouseup",removeScaling);
+  });
+  load.addEventListener("change",function(event){
+    confirmOverwrite(importFile,event);
+  });
+  colorInput.addEventListener("input",function(){
+    colorInputRefresh();
+    textEdit("insert",storedColor);
+    colorInput.focus();
+  });
+  function confirmOverwrite(action,event){
+    if (mustSave == true){
+      var ask = confirm("Changes you made may not be saved.");
+      if (ask == true){
+        action(event);
+      }
+    } else {
+      action(event);
+    }
+  }
+  function importFile(event){
+    var reader = new FileReader(), validTypes = ["text","image","audio"], validSubtypes = ["plain","css","javascript","json","html","svg+xml"], mimeType = load.files[0].type;
+    function mimeDivision(index){
+      return mimeType.split("/")[index];
+    }
+    if (mimeDivision(1) == validSubtypes[3] || mimeDivision(1) == validSubtypes[5]){
+      mimeType = mimeType.replace(mimeDivision(0),validTypes[0]);
+    }
+    if (validTypes.includes(mimeDivision(0))){
+      if (validTypes[0] == mimeDivision(0)){
+        reader.readAsText(load.files[0],"UTF-8");
+        reader.addEventListener("loadend",function(){
+          userInput.value = reader.result;
+          sourceChange = true;
+          mustSave = false;
+          previewRefresh();
+        });
+        loadedFile = load.files[0].name;
+        if (validSubtypes[0] == mimeDivision(1)){
+          changeView("default");
+        }
+        if (validSubtypes.slice(1,4).includes(mimeDivision(1))){
+          changeView("code");
+        }
+        if (validSubtypes.slice(4,6).includes(mimeDivision(1))){
+          changeView("split");
+        }
+      }
+      if (validTypes.slice(1,3).includes(mimeDivision(0))){
+        reader.readAsDataURL(load.files[0]);
+        reader.addEventListener("loadend",function(){
+          textEdit("insert",reader.result);
+        });
+      }
+    } else {
+      alert("Sorry, that file type isn't supported.");
+    }
+  }
+  function saveAs(extension){
+    var blob = new Blob([userInput.value],{type: "text/plain"});
+    save.href = URL.createObjectURL(blob);
+    if (extension == undefined){
+      if (loadedFile != undefined){
+        save.download = loadedFile;
+      } else {
+        save.download = "Untitled.txt";
+      }
+    } else {
+      save.download = "Untitled." + extension;
+    }
+    save.click();
+    loadedFile = save.download;
+    mustSave = false;
+  }
+  function changeView(newView){
+    var elements = ["header","userInput","scaler","preview"];
+    for (i = 0; i < elements.length; i++){
+      changeClass(elements[i],view,newView);
+    }
+    view = newView;
+    previewRefresh();
+  }
+  function changeOrientation(){
+    var elements = ["header","main","userInput","scaler","preview"], newOrientation;
+    if (orientation == "horizontal"){
+      newOrientation = "vertical";
+    }
+    if (orientation == "vertical"){
+      newOrientation = "horizontal";
+    }
+    changeView("code");
+    setTimeout(function(){
+      for (i = 0; i < elements.length; i++){
+        changeClass(elements[i],orientation,newOrientation);
+      }
+      scaler.style.transition = "none";
+      preview.style.transition = "none";
+      orientation = newOrientation;
+    }, 500);
+    setTimeout(function(){
+      changeView("split");
+    }, 550);
+  }
+  function changeClass(element,variable,newVariable){
+    document.getElementById(element).classList.remove(variable);
+    document.getElementById(element).removeAttribute("style");
+    document.getElementById(element).classList.add(newVariable);
+  }
+  function openDisplay(){
+    var display = window.open();
+    display.document.open();
+    display.document.write(userInput.value);
+    display.document.close();
+  }
+  function textEdit(type,text){
+    var cursor = userInput.selectionStart;
+    userInput.focus();
+    if (type == "insert"){
+      userInput.setRangeText(text);
+      userInput.setSelectionRange(cursor,cursor + text.length);
+    }
+    if (type == "delete"){
+      userInput.setSelectionRange(cursor,cursor + text);
+      userInput.setRangeText("");
+    }
+    sourceChange = true;
+    mustSave = true;
+    previewRefresh();
+  }
+  function openWidget(element){
+    var widget = document.getElementById(element);
+    if (widget.classList.contains("active")){
+      widget.classList.toggle("active");
+    } else {
+      var widgets = document.getElementsByClassName("widget");
+      for (i = 0; i < widgets.length; i++){
+        widgets[i].classList.remove("active");
+      }
+      widget.classList.add("active");
+    }
+  }
+  function closeWidget(element){
+    document.getElementById(element).classList.remove("active");
+  }
+  function activateReplacer(){
+    userInput.value = userInput.value.split(locate.value).join(modify.value);
+    sourceChange = true;
+    mustSave = true;
+    previewRefresh();
+  }
+  function flipReplacer(){
+    var store = locate.value;
+    locate.value = modify.value;
+    modify.value = store;
+  }
+  function clearReplacer(){
+    locate.value = "";
+    modify.value = "";
+  }
+  function colorInputRefresh(){
+    var get = colorInput.value.replace("#","");
+    if (get.length == 3 || get.length == 6){
+      storedColor = get;
+      if (storedColor.length == 3){
+        storedColor = storedColor.match(/.{1}/g);
+        for (i = 0; i < storedColor.length; i++){
+          storedColor[i] = storedColor[i] + storedColor[i];
+        }
+      }
+      if (storedColor.length == 6){
+        storedColor = storedColor.match(/.{1,2}/g);
+      }
+      for (i = 0; i < storedColor.length; i++){
+        storedColor[i] = parseInt(storedColor[i],16);
+      }
+      red.value = storedColor[0];
+      green.value = storedColor[1];
+      blue.value = storedColor[2];
+      storedColor = "#" + convertHex(red.value) + convertHex(green.value) + convertHex(blue.value);
+      colorPreview.style.background = storedColor;
+    }
+  }
+  function channelRefresh(){
+    storedColor = "#" + convertHex(red.value) + convertHex(green.value) + convertHex(blue.value);
+    colorPreview.style.background = storedColor;
+    colorInput.value = storedColor;
+    textEdit("insert",storedColor);
+    colorInput.focus();
+  }
+  function convertHex(channel){
+    var hex = parseInt(channel).toString(16);
+    if (hex.length == 1){
+      hex = 0 + hex;
+    }
+    return hex;
+  }
+  function copyPicker(){
+    colorInput.select();
+    document.execCommand("copy");
+  }
+  function insertPicker(){
+    textEdit("insert",storedColor);
+    channelRefresh();
+  }
+  function deletePicker(){
+    var selectionCount = userInput.selectionEnd - userInput.selectionStart;
+    if (selectionCount != 0){
+      textEdit("delete",selectionCount);
+    }
+  }
+  function insertTemplate(){
+    userInput.value = unescape("%3C!DOCTYPE%20html%3E%0A%3Chtml%3E%0A%3Chead%3E%0A%0A%3Ctitle%3E%3C%2Ftitle%3E%0A%3Cmeta%20name%3D%22viewport%22%20content%3D%22width%3Ddevice-width%2C%20initial-scale%3D1.0%22%3E%0A%3Clink%20rel%3D%22icon%22%20%0A%20%20%20%20%20%20type%3D%22%22%0A%20%20%20%20%20%20href%3D%22%22%3E%0A%3Cstyle%3E%0A%20%20*%20%7B%0A%20%20%20%20margin%3A%200%3B%0A%20%20%20%20padding%3A%200%3B%0A%20%20%20%20box-sizing%3A%20border-box%3B%0A%20%20%20%20font-family%3A%20sans-serif%3B%0A%20%20%7D%0A%20%20body%20%7B%0A%20%20%20%20width%3A%20100vw%3B%0A%20%20%20%20height%3A%20100vh%3B%0A%20%20%7D%0A%3C%2Fstyle%3E%0A%3C%2Fhead%3E%0A%3Cbody%3E%0A%0A%0A%0A%3C%2Fbody%3E%0A%3Cscript%3E%0A%0A%0A%0A%3C%2Fscript%3E%0A%3C%2Fhtml%3E");
+    sourceChange = true;
+    changeView("split");
+  }
+  function openDialog(element){
+    var dialogItem = document.getElementById(element);
+    if (dialogItem.classList.contains("active")){
+      dialogItem.classList.toggle("active");
+    } else {
+      var dialogs = document.getElementsByClassName("dialog-item");
+      for (i = 0; i < dialogs.length; i++){
+        dialogs[i].classList.remove("active");
+      }
+      dialog.classList.add("active");
+      dialogItem.classList.add("active");
+    }
+  }
+  function closeDialog(element){
+    dialog.classList.remove("active");
+    document.getElementById(element).classList.remove("active");
+  }
+  function previewRefresh(){
+    if (sourceChange == true){
+      preview.src = "about:blank";
+      preview.contentWindow.document.open();
+      preview.contentWindow.document.write(userInput.value);
+      preview.contentWindow.document.close();
+      sourceChange = false;
+    }
+  }
+  function toggleScaling(){
+    header.classList.toggle("resize");
+    main.classList.toggle("resize");
+    userInput.classList.toggle("resize");
+    scaler.classList.toggle("active");
+    preview.classList.toggle("resize");
+  }
+  function setScaling(event){
+    var cursorOffset, windowAxis;
+    if (orientation == "horizontal"){
+      cursorOffset = event.clientY - 40;
+      windowAxis = window.innerHeight;
+    }
+    if (orientation == "vertical"){
+      cursorOffset = event.clientX;
+      windowAxis = window.innerWidth;
+    }
+    if (cursorOffset <= 80){
+      cursorOffset = 80;
+    }
+    if (orientation == "horizontal"){
+      if (cursorOffset >= windowAxis - 120){
+        cursorOffset = windowAxis - 120;
+      }
+    } else {
+      if (cursorOffset >= windowAxis - 80){
+        cursorOffset = windowAxis - 80;
+      }
+    }
+    if (orientation == "horizontal"){
+      userInput.style.height = "calc(" + cursorOffset + "px - 8px)";
+      scaler.style.bottom = "calc(100% - " + cursorOffset + "px - 8px)";
+      preview.style.height = "calc(100% - " + cursorOffset + "px - 8px)";
+    }
+    if (orientation == "vertical"){
+      header.style.boxShadow = "calc(-100vw + " + cursorOffset + "px) 1px 8px rgba(0,0,0,0.75)";
+      userInput.style.width = "calc(" + cursorOffset + "px - 8px)";
+      scaler.style.right = "calc(100% - " + cursorOffset + "px - 8px)";
+      preview.style.width = "calc(100% - " + cursorOffset + "px - 8px)";
+    }
+  }
+  function removeScaling(event){
+    document.body.removeEventListener("mousemove",setScaling);
+    document.body.removeEventListener("mouseup",removeScaling);
+    toggleScaling();
+  }
+
+var context = document.querySelector(".ctxMenu");
+var ctxOpen = false;
+
+oncontextmenu = function(e) {
+if(ctxOpen == false){
+  ctxOpen = true;
+  context.style.top = e.y+"px";
+  context.style.left = e.x+"px";
+  context.style.opacity = 1;
+}else{
+  ctxOpen = true;
+  context.style.opacity = 0;
+  setTimeout(function(){
+  context.style.top = e.y+"px";
+  context.style.left = e.x+"px";
+  context.style.opacity = 1;
+},400);
+}
+}
+
+onclick = function(){
+userInput.focus();
+  if(ctxOpen == true){
+    ctxOpen = false;
+    context.style.opacity = 0;
+  }
+}
+
+setInterval(function(){
+  if(context.style.opacity == 0){
+    setTimeout(function(){
+      context.style.display = "none";
+    },300);
+  }else{
+    
+    context.style.display = "block";
+  }
+},0);
+
+function copy() {
+  userInput.focus();
+  var text = window.getSelection().toString();
+  document.execCommand('copy');
+}
+function paste() {
+  userInput.focus();
+  navigator.clipboard.readText()
+  .then(text => {
+    text = text.toString();
+    var start = userInput.selectionStart;
+    var first = userInput.value.substring(0,start) + text;
+    var second = userInput.value.substring(start,userInput.length);
+    userInput.value = first + second;
+    userInput.selectionStart = start + text.length;
+    userInput.selectionEnd = start + text.length;
+  });
+}
+function cut() {
+  userInput.focus();
+  var text = window.getSelection().toString();
+  userInput.value = userInput.value.split(text).join("");
+}
+
+</script>
+
+</body>
+
+</html>
