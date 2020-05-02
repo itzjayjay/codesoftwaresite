@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 
@@ -1237,7 +1236,6 @@ var ctxOpen = false;
 oncontextmenu = function(e) {
 if(ctxOpen == false){
   ctxOpen = true;
-  context.style.display = "block";
   context.style.top = e.y+"px";
   context.style.left = e.x+"px";
   context.style.opacity = 1;
@@ -1245,7 +1243,6 @@ if(ctxOpen == false){
   ctxOpen = true;
   context.style.opacity = 0;
   setTimeout(function(){
-  context.style.display = "block";
   context.style.top = e.y+"px";
   context.style.left = e.x+"px";
   context.style.opacity = 1;
@@ -1255,14 +1252,24 @@ if(ctxOpen == false){
 
 context.onclick = function(){
 userInput.focus();
+}
+onclick = function() {
   if(ctxOpen == true){
     ctxOpen = false;
     context.style.opacity = 0;
-    setTimeout(function(){
-      context.style.display = "none";
-    },250);
   }
 }
+
+setInterval(function(){
+  if(context.style.opacity == 0){
+    setTimeout(function(){
+      context.style.display = "none";
+    },300);
+  }else{
+    
+    context.style.display = "block";
+  }
+},0);
 
 function copy() {
   userInput.focus();
