@@ -1257,16 +1257,11 @@ userInput.focus();
   if(ctxOpen == true){
     ctxOpen = false;
     context.style.opacity = 0;
-  }
-}
-
-setInterval(function(){
-  if(context.style.opacity === 0){
     setTimeout(function(){
       context.style.display = "none";
     },300);
   }
-},300);
+}
 
 function copy() {
   userInput.focus();
