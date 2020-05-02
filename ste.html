@@ -637,10 +637,10 @@
   top:0;left:0;
   z-index: 4;
   transition: 0.3s ease opacity;
-  opacity: 0;
   color: var(--text-dark);
   cursor:pointer;
   border-radius: 5px;
+   transform: scale(0);
 }
 .ctxMenu span {
   float: right;
@@ -840,7 +840,7 @@
 </div>
 
 
-<div class="ctxMenu">
+<div class="ctxMenu" onmousedown="userInput.focus();" onmouseup="userInput.focus();" onclick="userInput.focus();">
 
 <div onmousedown="copy();" id="copy">Copy<span>Ctrl+C</span></div>
 <div onmousedown="paste();" id="paste">Paste<span>Ctrl+V</span></div>
@@ -1230,36 +1230,32 @@ blockKeypress(event);
     toggleScaling();
   }
 
-var context = document.querySelector(".ctxMenu");
-var ctxOpen = false;
+var ctx = document.querySelector(".ctxMenu");
+var ctxStyle = ctx.style;
 
-oncontextmenu = function(e) {
-if(ctxOpen == false){
-  ctxOpen = true;
-  context.style.display = "block";
-  context.style.top = e.y+"px";
-  context.style.left = e.x+"px";
-  context.style.opacity = 1;
-}else{
-  ctxOpen = true;
-  context.style.opacity = 0;
-  setTimeout(function(){
-  context.style.display = "block";
-  context.style.top = e.y+"px";
-  context.style.left = e.x+"px";
-  context.style.opacity = 1;
-},400);
-}
+oncontextmenu = function(e){
+var w = window.innerWidth, h = window.innerHeight, wh = 120, x = e.x+"px", y = e.y+"px";
+  ctx.style.transform = "scale(1)";
+  ctxStyle.top = y;
+  ctxStyle.left = x;
+  if(e.x + wh > w){
+    ctxStyle.left = ((parseInt(ctxStyle.left) - (parseInt(ctxStyle.left) - window.innerWidth)) - wh) + "px";
+  }
+  if(e.y + wh > h){
+    ctxStyle.top = ((parseInt(ctxStyle.top) - (parseInt(ctxStyle.top) - window.innerHeight)) - wh) + "px";
+  }
 }
 
-context.onclick = function(){
-userInput.focus();
-  if(ctxOpen == true){
-    ctxOpen = false;
-    context.style.opacity = 0;
-    setTimeout(function(){
-      context.style.display = "none";
-    },250);
+onclick = function(e) {
+  if(ctxStyle.transform == "scale(1)"){
+    ctxStyle.transform = "scale(0)";
+  }
+}
+
+window.onmousemove = function(e) {
+  if(ctxStyle.transform == "scale(0)"){
+    ctxStyle.top = e.y;
+    ctxStyle.left = e.x;
   }
 }
 
