@@ -1,4 +1,5 @@
-<html><head>
+<!DOCTYPE html>
+<head>
  <script>
  
   var isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
@@ -727,7 +728,7 @@ var isBlink = (isChrome || isOpera) && !!window.CSS;
     <path d="m 1.5795 65.78 l 64.201 -64.201 l 190.22 190.22 l 190.22 -190.22 l 64.201 64.201 l -190.22 190.22 l 190.22 190.22 l -64.201 64.201 l -190.22 -190.22 l -190.22 190.22 l -64.201 -64.201 l 190.22 -190.22 Z" />
   </symbol>
 </svg>
-<header class="vertical split" id="header">
+<header class="vertical default" id="header">
   <div class="toolbar">
     <div class="dropdown">
       <button>File</button>
@@ -831,11 +832,11 @@ var isBlink = (isChrome || isOpera) && !!window.CSS;
   </div>
 </header>
 <main class="vertical" id="main">
-  <textarea class="vertical split" id="userInput" spellcheck="false" placeholder="Welcome to the Smart Text Editor! This site was created to allow for easy text editing and HTML development within your browser!"></textarea>
-  <div class="vertical split" id="scaler">
+  <textarea class="vertical default" id="userInput" spellcheck="false" placeholder="Welcome to the Smart Text Editor! This site was created to allow for easy text editing and HTML development within your browser!"></textarea>
+  <div class="vertical default" id="scaler">
     <div class="handle" onselectstart="return false;">▲<br>▼</div>
   </div>
-  <iframe class="vertical split" id="preview" src="about:blank"></iframe>
+  <iframe class="vertical default" id="preview" src="about:blank"></iframe>
 </main>
 <div class="onload" id="dialog">
   <div class="dialog-item onload" id="welcome">
@@ -850,7 +851,7 @@ var isBlink = (isChrome || isOpera) && !!window.CSS;
     </div>
   </div>
 </div>
-<div class="ctxMenu" style="left: 634px; top: 155px; transform: scale(0);" onmousedown="userInput.focus();" onmouseup="userInput.focus();" onclick="userInput.focus();">
+<div class="ctxMenu" style="left: 1071px; top: 261px; transform: scale(0);" onmousedown="userInput.focus();" onmouseup="userInput.focus();" onclick="userInput.focus();">
 <div id="copy" onmousedown="copy();">Copy<span>Ctrl+C</span></div>
 <div id="paste" onmousedown="paste();">Paste<span>Ctrl+V</span></div>
 <div id="cut" onmousedown="cut();">Cut<span>Ctrl+X</span></div>
@@ -1285,6 +1286,5 @@ function cut() {
   userInput.value = userInput.value.split(text).join("");
 }
 </script>
-
 
 </body></html>
