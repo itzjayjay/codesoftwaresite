@@ -13,7 +13,7 @@ var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.r
 var isEdgeChromium = isChrome && (navigator.userAgent.indexOf("Edg") != -1);
 var isBlink = (isChrome || isOpera) && !!window.CSS;
   
-  if(!isChrome && !isEdge && !isEdgeChromium){
+  //if(!isChrome && !isEdge && !isEdgeChromium){
     alert("Your device isn't currently compatible with Smart Text Editor!");
     window.close();
   }
@@ -180,8 +180,8 @@ var isBlink = (isChrome || isOpera) && !!window.CSS;
   }
   #header .title {
     position: absolute;
-    left: calc(50% - 75px);
-    width: 150px;
+    left: calc(50% - 145px);
+    width: 270px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -772,6 +772,7 @@ var isBlink = (isChrome || isOpera) && !!window.CSS;
       <ul>
         <li onmousedown="openWidget('replacer');">Replace Text<span>Ctrl + Shift + F</span></li>
         <li onmousedown="openWidget('picker');">Color Picker<span>Ctrl + Shift + K</span></li>
+        <li onmousedown="openWidget('uri');">URI Encoder/Decoder<span>Ctrl + Shift + I</span></li>
         <li onmousedown="confirmOverwrite(insertTemplate);">Import HTML Template<span>Ctrl + Shift + H</span></li>
         <li>Online Resources...
           <svg><use href="#arrow"/></svg>
@@ -790,7 +791,7 @@ var isBlink = (isChrome || isOpera) && !!window.CSS;
   </div>
   <div class="title">
     <svg><use href="#pencil"/></svg>
-    <section>Smart Text Editor</section>
+    <section>Smart Text Editor - Chrome Edition</section>
   </div>
   <div class="attribution">
     <span>Inspired by <a href="https://htmledit.squarefree.com/" target="_blank">Real-Time HTML Editor</a> and <a href="https://www.editpad.org/" target="_blank">Edit Pad</a>!</span>
@@ -837,6 +838,23 @@ var isBlink = (isChrome || isOpera) && !!window.CSS;
       <button onmouseup="deletePicker();">Delete</button>
     </div>
   </div>
+  <div id="uri" class="widget">
+    <div class="header">
+      <section>URI Encoder/Decoder</section>
+      <svg onmousedown="closeWidget('uri');"><use href="#close"></use></svg>
+    </div>
+    <div class="content">
+      <div class="item expand">
+        <textarea id="encoded" placeholder="Text to decode/encode..."></textarea>
+        <textarea id="decoded" onmouseup="selectIt('decoded');" onkeydown="return false;" placeholder="Decoded/Encoded text..."></textarea>
+      </div>
+    </div>
+    <div class="toolbar">
+      <button onmouseup="decode();">Decode</button>
+      <button onmouseup="encode();">Encode</button>
+      <button onmouseup="flipEncoder();">Flip</button>
+    </div>
+  </div>
 </header>
 
 <main id="main" class="horizontal">
@@ -851,11 +869,11 @@ var isBlink = (isChrome || isOpera) && !!window.CSS;
   <div id="welcome" class="dialog-item onload">
     <div class="header">
       <svg class="icon"><use href="#pencil"/></svg>
-      <section>Smart Text Editor</section>
+      <section>Smart Text Editor - Chrome Edition</section>
     </div>
     <div class="content">
-      <span>Welcome to the Smart Text Editor!</span>
-      <span>Created by Brandon Bennett</span>
+      <span>Welcome to the Smart Text Editor! Chrome Edition</span>
+      <span>Created by Brandon Bennett and Jacob McGinley</span>
     </div>
   </div>
 </div>
@@ -927,6 +945,9 @@ blockKeypress(event);
       }
       if (event.key == "H"){blockKeypress(event);
         confirmOverwrite(insertTemplate);
+      }
+      if (event.key == "I"){blockKeypress(event);
+        openWidget("uri");
       }
     }
   });
@@ -1302,6 +1323,23 @@ function cut() {
   userInput.focus();
   var text = window.getSelection().toString();
   userInput.value = userInput.value.split(text).join("");
+}
+
+function encode() {
+  var val = document.getElementById("encoded").value;
+  document.getElementById("decoded").value = encodeURI(val);
+}
+function decode() {
+  var val = document.getElementById("encoded").value;
+  document.getElementById("decoded").value = decodeURI(val);
+}
+function flipEncoder() {
+  var temp = document.getElementById("decoded").value;
+  document.getElementById("decoded").value = document.getElementById("encoded").value;
+  document.getElementById("encoded").value = temp;
+}
+function selectIt(elem){
+  document.getElementById(elem).select();
 }
 </script>
 
