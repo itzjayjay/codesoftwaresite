@@ -1,9 +1,6 @@
-<!DOCTYPE html>
-<html>
-
-<head>
+<html><head>
  <script>
-  
+ 
   var isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
 var isFirefox = typeof InstallTrigger !== 'undefined';
 var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification));
@@ -12,26 +9,24 @@ var isEdge = !isIE && !!window.StyleMedia;
 var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
 var isEdgeChromium = isChrome && (navigator.userAgent.indexOf("Edg") != -1);
 var isBlink = (isChrome || isOpera) && !!window.CSS;
-  
+ 
   if(!isChrome && !isEdge && !isEdgeChromium){
     alert("Your device isn't currently compatible with Smart Text Editor!");
     window.close();
   }
-  
+ 
   if(isChrome){
-   window.open("ste.html","_self"); 
+   window.open("ste.html","_self");
   }
   if(isEdgeChromium){
-   window.open("ste.html","_self"); 
+   window.open("ste.html","_self");
   }
-  
+ 
  </script>
-
 <title>Smart Text Editor - Edge Edition</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAEJQTFRFAAAA23yI1dXV0VdmzERVji87ycnJw8PDtz1M86xN8JQar6+viIiI7ogA1noApl8A5c+t3sGW2rqKKioqxKd8mIJgbs8VzwAAABZ0Uk5TAP///////////////////////////1SBjaMAAAA8SURBVHicY2DABxgZUflMzCysKHw2dg5kAU4udm4eFD4vHzqfn4p8AXS+oBAKn0FYSEQUxQfCwqh8dAAASZYC5vJ/xd8AAAAASUVORK5CYII=">
-
+<link href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAEJQTFRFAAAA23yI1dXV0VdmzERVji87ycnJw8PDtz1M86xN8JQar6+viIiI7ogA1noApl8A5c+t3sGW2rqKKioqxKd8mIJgbs8VzwAAABZ0Uk5TAP///////////////////////////1SBjaMAAAA8SURBVHicY2DABxgZUflMzCysKHw2dg5kAU4udm4eFD4vHzqfn4p8AXS+oBAKn0FYSEQUxQfCwqh8dAAASZYC5vJ/xd8AAAAASUVORK5CYII=" rel="icon" type="image/png">
 <style>
   * {
     margin: 0;
@@ -44,13 +39,11 @@ var isBlink = (isChrome || isOpera) && !!window.CSS;
     --container-medium: #1c1c1c;
     --container-medium-hover: #2c2c2c;
     --container-light: #ffffff;
-
     --text-dark: #aaaaaa;
     --text-medium: #cccccc;
     --text-info: #777777;
     --text-light: #ffffff;
     --text-hover: #ffffff;
-
     --button-medium: #3a3a3a;
     --button-medium-hover: #4a4a4a;
   }
@@ -69,6 +62,8 @@ var isBlink = (isChrome || isOpera) && !!window.CSS;
     font-size: min(3.5vw, 14px);
     background: var(--button-medium);
     border: none;
+    margin:5px;
+    padding:1px 7px;
     border-radius: 4px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.75);
     cursor: pointer;
@@ -437,8 +432,8 @@ var isBlink = (isChrome || isOpera) && !!window.CSS;
     font-size: min(2.5vw, 11px);
   }
   .dropdown li svg {
-    width: 5px;
-    height: 5px
+    width: 8px;
+    height: 8px;
     fill: var(--text-info);
     transition: fill 0.125s ease;
   }
@@ -652,7 +647,6 @@ var isBlink = (isChrome || isOpera) && !!window.CSS;
     font-size: min(4.5vh, 1.5vw);
     text-align: center;
   }
-
 .ctxMenu {
   width: 120px;
   height: 120px;
@@ -679,66 +673,61 @@ var isBlink = (isChrome || isOpera) && !!window.CSS;
   padding:5px;
   border-radius: 5px;
 }
-
 .ctxMenu div:hover {
   transition: 0.2s ease all;
   background: var(--button-medium-hover);
   color: var(--text-light);
 }
 </style>
-
 </head>
-
 <body oncontextmenu="return false;">
-
-<svg id="svg">
+<svg xmlns="http://www.w3.org/2000/svg" id="svg">
   <symbol id="pencil" viewBox="0 0 512 512">
     <defs>
-      <linearGradient id="wood" x1="-22.662" x2="-32.039" y1="-27.117" y2="-27.117" gradientTransform="matrix(-9.3466 -9.3775 9.3775 -9.3466 0 0)" gradientUnits="userSpaceOnUse">
-        <stop stop-color="#e5cfad" offset="0"/>
-        <stop stop-color="#dec196" offset="0.25"/>
-        <stop stop-color="#daba8a" offset="0.5"/>
-        <stop stop-color="#c4a77c" offset="0.75"/>
-        <stop stop-color="#988260" offset="1"/>
+      <linearGradient id="wood" gradientUnits="userSpaceOnUse" gradientTransform="matrix(-9.3466, -9.3775, 9.3775, -9.3466, 0, 0)" x1="-22.662" y1="-27.117" x2="-32.039" y2="-27.117">
+        <stop stop-color="rgb(229, 207, 173)" offset="0" />
+        <stop stop-color="rgb(222, 193, 150)" offset="0.25" />
+        <stop stop-color="rgb(218, 186, 138)" offset="0.5" />
+        <stop stop-color="rgb(196, 167, 124)" offset="0.75" />
+        <stop stop-color="rgb(152, 130, 96)" offset="1" />
       </linearGradient>
-      <linearGradient id="paint" x1="22.338" x2="31.811" y1="15.409" y2="15.409" gradientTransform="matrix(9.4412 9.4724 -9.4724 9.4412 0 0)" gradientUnits="userSpaceOnUse">
-        <stop stop-color="#f3ac4d" offset="0"/>
-        <stop stop-color="#f0941a" offset="0.25"/>
-        <stop stop-color="#ee8800" offset="0.5"/>
-        <stop stop-color="#d67a00" offset="0.75"/>
-        <stop stop-color="#a65f00" offset="1"/>
+      <linearGradient id="paint" gradientUnits="userSpaceOnUse" gradientTransform="matrix(9.4412, 9.4724, -9.4724, 9.4412, 0, 0)" x1="22.338" y1="15.409" x2="31.811" y2="15.409">
+        <stop stop-color="rgb(243, 172, 77)" offset="0" />
+        <stop stop-color="rgb(240, 148, 26)" offset="0.25" />
+        <stop stop-color="rgb(238, 136, 0)" offset="0.5" />
+        <stop stop-color="rgb(214, 122, 0)" offset="0.75" />
+        <stop stop-color="rgb(166, 95, 0)" offset="1" />
       </linearGradient>
-      <linearGradient id="metal" x1="22.267" x2="31.751" y1="-8.6537" y2="-8.6537" gradientTransform="matrix(9.4527 9.484 -9.484 9.4527 0 0)" gradientUnits="userSpaceOnUse">
-        <stop stop-color="#d5d5d5" offset="0"/>
-        <stop stop-color="#c9c9c9" offset="0.25"/>
-        <stop stop-color="#c3c3c3" offset="0.5"/>
-        <stop stop-color="#afafaf" offset="0.75"/>
-        <stop stop-color="#888888" offset="1"/>
+      <linearGradient id="metal" gradientUnits="userSpaceOnUse" gradientTransform="matrix(9.4527, 9.484, -9.484, 9.4527, 0, 0)" x1="22.267" y1="-8.6537" x2="31.751" y2="-8.6537">
+        <stop stop-color="rgb(213, 213, 213)" offset="0" />
+        <stop stop-color="rgb(201, 201, 201)" offset="0.25" />
+        <stop stop-color="rgb(195, 195, 195)" offset="0.5" />
+        <stop stop-color="rgb(175, 175, 175)" offset="0.75" />
+        <stop stop-color="rgb(136, 136, 136)" offset="1" />
       </linearGradient>
-      <linearGradient id="eraser" x1="22.164" x2="31.683" y1="-14.141" y2="-14.141" gradientTransform="matrix(9.4872 9.5187 -9.5187 9.4872 0 0)" gradientUnits="userSpaceOnUse">
-        <stop stop-color="#db7c88" offset="0"/>
-        <stop stop-color="#d15766" offset="0.25"/>
-        <stop stop-color="#cc4455" offset="0.5"/>
-        <stop stop-color="#b73d4c" offset="0.75"/>
-        <stop stop-color="#8e2f3b" offset="1"/>
+      <linearGradient id="eraser" gradientUnits="userSpaceOnUse" gradientTransform="matrix(9.4872, 9.5187, -9.5187, 9.4872, 0, 0)" x1="22.164" y1="-14.141" x2="31.683" y2="-14.141">
+        <stop stop-color="rgb(219, 124, 136)" offset="0" />
+        <stop stop-color="rgb(209, 87, 102)" offset="0.25" />
+        <stop stop-color="rgb(204, 68, 85)" offset="0.5" />
+        <stop stop-color="rgb(183, 61, 76)" offset="0.75" />
+        <stop stop-color="rgb(142, 47, 59)" offset="1" />
       </linearGradient>
     </defs>
-    <path d="m170.77 428.71-168.7 81.953 81.054-169.89z" fill="url(#wood)"/>
-    <path d="m54.396 484.82-52.657 25.846 25.566-53.027z" fill="#2a2a2a"/>
-    <path d="m314.47 108.52c-9.7304 9.7626 2.2127 37.574 26.676 62.118 24.463 24.544 52.182 36.527 61.913 26.764l-231.03 231.8c-9.7304 9.7626-37.45-2.2201-61.913-26.764-24.463-24.544-36.406-52.355-26.676-62.118z" fill="url(#paint)"/>
-    <path d="m365.73 56.454c-9.827 9.8595 2.2347 37.947 26.94 62.734 24.706 24.788 52.7 36.889 62.527 27.03l-55.137 55.319c-9.827 9.8595-37.821-2.2421-62.527-27.03-24.706-24.788-36.767-52.875-26.94-62.734z" fill="url(#metal)"/>
-    <path d="m417.17 4.7679c-9.8787 9.9114 2.2886 38.189 27.176 63.159 24.888 24.97 53.072 37.178 62.95 27.266l-54.165 54.344c-9.8787 9.9114-38.063-2.2962-62.95-27.266-24.888-24.97-37.055-53.247-27.176-63.159z" fill="url(#eraser)"/>
-    <path d="m417.17 4.7679c9.8787-9.9114 38.063 2.2962 62.95 27.266 24.888 24.97 37.055 53.247 27.176 63.159s-38.062-2.2962-62.95-27.266c-24.888-24.97-37.055-53.247-27.176-63.159z" fill="#db7c88"/>
+    <path fill="url(#wood)" d="m 170.77 428.71 l -168.7 81.953 l 81.054 -169.89 Z" />
+    <path fill="#2a2a2a" d="m 54.396 484.82 l -52.657 25.846 l 25.566 -53.027 Z" />
+    <path fill="url(#paint)" d="m 314.47 108.52 c -9.7304 9.7626 2.2127 37.574 26.676 62.118 c 24.463 24.544 52.182 36.527 61.913 26.764 l -231.03 231.8 c -9.7304 9.7626 -37.45 -2.2201 -61.913 -26.764 c -24.463 -24.544 -36.406 -52.355 -26.676 -62.118 Z" />
+    <path fill="url(#metal)" d="m 365.73 56.454 c -9.827 9.8595 2.2347 37.947 26.94 62.734 c 24.706 24.788 52.7 36.889 62.527 27.03 l -55.137 55.319 c -9.827 9.8595 -37.821 -2.2421 -62.527 -27.03 c -24.706 -24.788 -36.767 -52.875 -26.94 -62.734 Z" />
+    <path fill="url(#eraser)" d="m 417.17 4.7679 c -9.8787 9.9114 2.2886 38.189 27.176 63.159 c 24.888 24.97 53.072 37.178 62.95 27.266 l -54.165 54.344 c -9.8787 9.9114 -38.063 -2.2962 -62.95 -27.266 c -24.888 -24.97 -37.055 -53.247 -27.176 -63.159 Z" />
+    <path fill="#db7c88" d="m 417.17 4.7679 c 9.8787 -9.9114 38.063 2.2962 62.95 27.266 c 24.888 24.97 37.055 53.247 27.176 63.159 s -38.062 -2.2962 -62.95 -27.266 c -24.888 -24.97 -37.055 -53.247 -27.176 -63.159 Z" />
   </symbol>
   <symbol id="arrow" viewBox="0 0 512 512">
-    <path d="m112.66 0 286.68 256-286.68 256z"/>
+    <path d="m 112.66 0 l 286.68 256 l -286.68 256 Z" />
   </symbol>
   <symbol id="close" viewBox="0 0 512 512">
-    <path d="m1.5795 65.78 64.201-64.201 190.22 190.22 190.22-190.22 64.201 64.201-190.22 190.22 190.22 190.22-64.201 64.201-190.22-190.22-190.22 190.22-64.201-64.201 190.22-190.22z"/>
+    <path d="m 1.5795 65.78 l 64.201 -64.201 l 190.22 190.22 l 190.22 -190.22 l 64.201 64.201 l -190.22 190.22 l 190.22 190.22 l -64.201 64.201 l -190.22 -190.22 l -190.22 190.22 l -64.201 -64.201 l 190.22 -190.22 Z" />
   </symbol>
 </svg>
-
-<header id="header" class="default horizontal">
+<header class="vertical split" id="header">
   <div class="toolbar">
     <div class="dropdown">
       <button>File</button>
@@ -747,7 +736,7 @@ var isBlink = (isChrome || isOpera) && !!window.CSS;
         <li onmousedown="load.click();"><input id="load" type="file">Load<span>Ctrl + Shift + L</span></li>
         <li onmousedown="saveAs();"><a id="save"></a>Save<span>Ctrl + Shift + S</span></li>
         <li>Save As...
-          <svg><use href="#arrow"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg"><use href="#arrow" /></svg>
           <ul>
             <li onmousedown="saveAs('txt');">Plain Text<span>.txt</span></li>
             <li onmousedown="saveAs('html');">HTML<span>.html</span></li>
@@ -777,7 +766,7 @@ var isBlink = (isChrome || isOpera) && !!window.CSS;
         <li onmousedown="openWidget('picker');">Color Picker<span>Ctrl + Shift + K</span></li>
         <li onmousedown="confirmOverwrite(insertTemplate);">Import HTML Template<span>Ctrl + Shift + H</span></li>
         <li>Online Resources...
-          <svg><use href="#arrow"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg"><use href="#arrow" /></svg>
           <ul>
             <li onmousedown="window.open('https://www.diffchecker.com/','_blank');">Difference Finder</li>
             <li onmousedown="window.open('https://htmlformatter.com/','_blank');">HTML Formatter</li>
@@ -792,21 +781,21 @@ var isBlink = (isChrome || isOpera) && !!window.CSS;
     </div>
   </div>
   <div class="title">
-    <svg><use href="#pencil"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg"><use href="#pencil" /></svg>
     <section>STE Edge Edition</section>
   </div>
   <div class="attribution">
     <span>Inspired by <a href="https://htmledit.squarefree.com/" target="_blank">Real-Time HTML Editor</a> and <a href="https://www.editpad.org/" target="_blank">Edit Pad</a>!</span>
   </div>
-  <div id="replacer" class="widget">
+  <div class="widget" id="replacer">
     <div class="header">
       <section>Replace Text</section>
-      <svg onmousedown="closeWidget('replacer');"><use href="#close"></use></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" onmousedown="closeWidget('replacer');"><use href="#close" /></svg>
     </div>
     <div class="content">
       <div class="item expand">
-        <textarea id="locate" placeholder="Text to locate..." spellcheck="false"></textarea>
-        <textarea id="modify" placeholder="Replace with..." spellcheck="false"></textarea>
+        <textarea id="locate" spellcheck="false" placeholder="Text to locate..."></textarea>
+        <textarea id="modify" spellcheck="false" placeholder="Replace with..."></textarea>
       </div>
     </div>
     <div class="toolbar">
@@ -815,23 +804,23 @@ var isBlink = (isChrome || isOpera) && !!window.CSS;
       <button onmouseup="clearReplacer();">Clear</button>
     </div>
   </div>
-  <div id="picker" class="widget">
+  <div class="widget" id="picker">
     <div class="header">
       <section>Color Picker</section>
-      <svg onmousedown="closeWidget('picker');"><use href="#close"></use></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" onmousedown="closeWidget('picker');"><use href="#close" /></svg>
     </div>
     <div class="content">
       <div class="item">
-        <span id="colorPreview"></span>
-        <input id="colorInput" type="text" value="#ff7f00" maxlength="7" spellcheck="false" autocomplete="off">
+        <span id="colorPreview" style="background: rgb(255, 127, 0);"></span>
+        <input id="colorInput" spellcheck="false" type="text" maxlength="7" value="#ff7f00" autocomplete="off">
       </div>
       <div class="item">
         <label for="red">Red</label>
-        <input id="red" type="range" min="0" max="255" oninput="channelRefresh();">
+        <input id="red" oninput="channelRefresh();" type="range" min="0" max="255">
         <label for="green">Green</label>
-        <input id="green" type="range" min="0" max="255" oninput="channelRefresh();">
+        <input id="green" oninput="channelRefresh();" type="range" min="0" max="255">
         <label for="blue">Blue</label>
-        <input id="blue" type="range" min="0" max="255" oninput="channelRefresh();">
+        <input id="blue" oninput="channelRefresh();" type="range" min="0" max="255">
       </div>
     </div>
     <div class="toolbar">
@@ -841,19 +830,17 @@ var isBlink = (isChrome || isOpera) && !!window.CSS;
     </div>
   </div>
 </header>
-
-<main id="main" class="horizontal">
-  <textarea id="userInput" class="default horizontal" placeholder="Welcome to the Smart Text Editor! This site was created to allow for easy text editing and HTML development within your browser!" spellcheck="false"></textarea>
-  <div id="scaler" class="default horizontal">
-    <div onselectstart="return false;" class="handle">▲<br>▼</div>
+<main class="vertical" id="main">
+  <textarea class="vertical split" id="userInput" spellcheck="false" placeholder="Welcome to the Smart Text Editor! This site was created to allow for easy text editing and HTML development within your browser!"></textarea>
+  <div class="vertical split" id="scaler">
+    <div class="handle" onselectstart="return false;">▲<br>▼</div>
   </div>
-  <iframe id="preview" class="default horizontal" src="about:blank"></iframe>
+  <iframe class="vertical split" id="preview" src="about:blank"></iframe>
 </main>
-
-<div id="dialog" class="onload">
-  <div id="welcome" class="dialog-item onload">
+<div class="onload" id="dialog">
+  <div class="dialog-item onload" id="welcome">
     <div class="header">
-      <svg class="icon"><use href="#pencil"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon"><use href="#pencil" /></svg>
       <section>Smart Text Editor - Edge Edition</section>
     </div>
     <div class="content">
@@ -863,15 +850,11 @@ var isBlink = (isChrome || isOpera) && !!window.CSS;
     </div>
   </div>
 </div>
-
-<div class="ctxMenu" onmousedown="userInput.focus();" onmouseup="userInput.focus();" onclick="userInput.focus();">
-
-<div onmousedown="copy();" id="copy">Copy<span>Ctrl+C</span></div>
-<div onmousedown="paste();" id="paste">Paste<span>Ctrl+V</span></div>
-<div onmousedown="cut();" id="cut">Cut<span>Ctrl+X</span></div>
-
+<div class="ctxMenu" style="left: 634px; top: 155px; transform: scale(0);" onmousedown="userInput.focus();" onmouseup="userInput.focus();" onclick="userInput.focus();">
+<div id="copy" onmousedown="copy();">Copy<span>Ctrl+C</span></div>
+<div id="paste" onmousedown="paste();">Paste<span>Ctrl+V</span></div>
+<div id="cut" onmousedown="cut();">Cut<span>Ctrl+X</span></div>
 </div>
-
 <script>
   var view = "default", orientation = "horizontal", loadedFile = undefined, sourceChange = false, mustSave = false, storedColor;
   changeView("code");
@@ -1253,10 +1236,8 @@ function blockKeypress(e){
     document.body.removeEventListener("mouseup",removeScaling);
     toggleScaling();
   }
-
 var ctx = document.querySelector(".ctxMenu");
 var ctxStyle = ctx.style;
-
 oncontextmenu = function(e){
 var w = window.innerWidth, h = window.innerHeight, wh = 120, x = e.x+"px", y = e.y+"px";
   ctx.style.transform = "scale(1)";
@@ -1269,20 +1250,17 @@ var w = window.innerWidth, h = window.innerHeight, wh = 120, x = e.x+"px", y = e
     ctxStyle.top = ((parseInt(ctxStyle.top) - (parseInt(ctxStyle.top) - window.innerHeight)) - wh) + "px";
   }
 }
-
 onclick = function(e) {
   if(ctxStyle.transform == "scale(1)"){
     ctxStyle.transform = "scale(0)";
   }
 }
-
 window.onmousemove = function(e) {
   if(ctxStyle.transform == "scale(0)"){
     ctxStyle.top = e.y;
     ctxStyle.left = e.x;
   }
 }
-
 function copy() {
   userInput.focus();
   var text = window.getSelection().toString();
@@ -1308,6 +1286,5 @@ function cut() {
 }
 </script>
 
-</body>
 
-</html>
+</body></html>
