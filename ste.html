@@ -2,6 +2,27 @@
 <html>
 
 <head>
+ <script>
+  
+  var isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+var isFirefox = typeof InstallTrigger !== 'undefined';
+var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification));
+var isIE = /*@cc_on!@*/false || !!document.documentMode;
+var isEdge = !isIE && !!window.StyleMedia;
+var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+var isEdgeChromium = isChrome && (navigator.userAgent.indexOf("Edg") != -1);
+var isBlink = (isChrome || isOpera) && !!window.CSS;
+  
+  if(!isChrome && !isEdge && !isEdgeChromium){
+    alert("Your device isn't currently compatible with Smart Text Editor!");
+    window.close();
+  }
+  
+  if(isEdge){
+   window.open("EE.html","_self"); 
+  }
+  
+  </script>
 
 <title>Smart Text Editor</title>
 <meta charset="UTF-8">
