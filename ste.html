@@ -628,11 +628,44 @@
     font-size: min(4.5vh, 1.5vw);
     text-align: center;
   }
+
+.ctxMenu {
+  width: 120px;
+  height: 120px;
+  background: var(--container-dark);
+  position:fixed;
+  top:0;left:0;
+  z-index: 4;
+  transition: 0.3s ease opacity;
+  opacity: 0;
+  color: var(--text-dark);
+  cursor:pointer;
+  border-radius: 5px;
+}
+.ctxMenu span {
+  float: right;
+  color: var(--text-info);
+  font-size: 10px;
+  line-height:20px;
+}
+.ctxMenu div {
+  position:relative;
+  height:40px;
+  width:100%;
+  padding:5px;
+  border-radius: 5px;
+}
+
+.ctxMenu div:hover {
+  transition: 0.2s ease all;
+  background: var(--button-medium-hover);
+  color: var(--text-light);
+}
 </style>
 
 </head>
 
-<body>
+<body oncontextmenu="return false;">
 
 <svg id="svg">
   <symbol id="pencil" viewBox="0 0 512 512">
@@ -806,9 +839,19 @@
   </div>
 </div>
 
+
+<div class="ctxMenu">
+
+<div onmousedown="copy();" id="copy">Copy<span>Ctrl+C</span></div>
+<div onmousedown="paste();" id="paste">Paste<span>Ctrl+V</span></div>
+<div onmousedown="cut();" id="cut">Cut<span>Ctrl+X</span></div>
+
+</div>
+
 <script>
   var view = "default", orientation = "horizontal", loadedFile = undefined, sourceChange = false, mustSave = false, storedColor;
-  window.addEventListener("load",function(){
+changeView("code");  
+window.addEventListener("load",function(){
     if (window == window.parent){
       userInput.focus();
     } else {
@@ -1186,6 +1229,63 @@ blockKeypress(event);
     document.body.removeEventListener("mouseup",removeScaling);
     toggleScaling();
   }
+
+var context = document.querySelector(".ctxMenu");
+var ctxOpen = false;
+
+oncontextmenu = function(e) {
+if(ctxOpen == false){
+  ctxOpen = true;
+  context.style.display = "block";
+  context.style.top = e.y+"px";
+  context.style.left = e.x+"px";
+  context.style.opacity = 1;
+}else{
+  ctxOpen = true;
+  context.style.opacity = 0;
+  setTimeout(function(){
+  context.style.display = "block";
+  context.style.top = e.y+"px";
+  context.style.left = e.x+"px";
+  context.style.opacity = 1;
+},400);
+}
+}
+
+onclick = function(){
+userInput.focus();
+  if(ctxOpen == true){
+    ctxOpen = false;
+    context.style.opacity = 0;
+    setTimeout(function(){
+      context.style.display = "none";
+    },250);
+  }
+}
+
+function copy() {
+  userInput.focus();
+  var text = window.getSelection().toString();
+  document.execCommand('copy');
+}
+function paste() {
+  userInput.focus();
+  navigator.clipboard.readText()
+  .then(text => {
+    text = text.toString();
+    var start = userInput.selectionStart;
+    var first = userInput.value.substring(0,start) + text;
+    var second = userInput.value.substring(start,userInput.length);
+    userInput.value = first + second;
+    userInput.selectionStart = start + text.length;
+    userInput.selectionEnd = start + text.length;
+  });
+}
+function cut() {
+  userInput.focus();
+  var text = window.getSelection().toString();
+  userInput.value = userInput.value.split(text).join("");
+}
 </script>
 
 </body>
