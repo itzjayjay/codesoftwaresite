@@ -1236,6 +1236,7 @@ var ctxOpen = false;
 oncontextmenu = function(e) {
 if(ctxOpen == false){
   ctxOpen = true;
+  context.style.display = "block";
   context.style.top = e.y+"px";
   context.style.left = e.x+"px";
   context.style.opacity = 1;
@@ -1243,6 +1244,7 @@ if(ctxOpen == false){
   ctxOpen = true;
   context.style.opacity = 0;
   setTimeout(function(){
+  context.style.display = "block";
   context.style.top = e.y+"px";
   context.style.left = e.x+"px";
   context.style.opacity = 1;
@@ -1259,14 +1261,12 @@ userInput.focus();
 }
 
 setInterval(function(){
-  if(context.style.opacity == 0){
+  if(context.style.opacity === 0){
     setTimeout(function(){
-      context.style.top = -130+"px";
+      context.style.display = "none";
     },300);
-  }else{
-    context;
   }
-},0);
+},300);
 
 function copy() {
   userInput.focus();
