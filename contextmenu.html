@@ -1,0 +1,116 @@
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Arial", sans-serif;
+  }
+:root {
+    --container-dark: #171717;
+
+    --text-dark: #aaaaaa;
+    --text-info: #777777;
+    --text-light: #ffffff;
+
+    --button-medium-hover: #4a4a4a;
+  }
+
+.ctxMenu {
+  width: 120px;
+  height: 120px;
+  background: var(--container-dark);
+  position:fixed;
+  top:0;left:0;
+  z-index: 4;
+  transition: 0.3s ease all;
+  color: var(--text-dark);
+  cursor:pointer;
+  border-radius: 5px;
+  transform: scale(0);
+}
+.ctxMenu span {
+  float: right;
+  color: var(--text-info);
+  font-size: 10px;
+  line-height:20px;
+}
+.ctxMenu div {
+  position:relative;
+  height:40px;
+  width:100%;
+  padding:5px;
+  border-radius: 5px;
+}
+
+.ctxMenu div:hover {
+  transition: 0.2s ease all;
+  background: var(--button-medium-hover);
+  color: var(--text-light);
+}
+
+</style>
+<body oncontextmenu="return false;">
+
+<div class="ctxMenu">
+
+<div onmousedown="copy();" id="copy">Copy<span>Ctrl+C</span></div>
+<div onmousedown="paste();" id="paste">Paste<span>Ctrl+V</span></div>
+<div onmousedown="cut();" id="cut">Cut<span>Ctrl+X</span></div>
+
+</div>
+
+</body>
+<script>
+var ctx = document.querySelector(".ctxMenu");
+var ctxStyle = ctx.style;
+
+oncontextmenu = function(e){
+var w = window.innerWidth, h = window.innerHeight, wh = 120, x = e.x+"px", y = e.y+"px";
+  ctx.style.transform = "scale(1)";
+  ctxStyle.top = y;
+  ctxStyle.left = x;
+  if(e.x + wh > w){
+    ctxStyle.left = ((parseInt(ctxStyle.left) - (parseInt(ctxStyle.left) - window.innerWidth)) - wh) + "px";
+  }
+  if(e.y + wh > h){
+    ctxStyle.top = ((parseInt(ctxStyle.top) - (parseInt(ctxStyle.top) - window.innerHeight)) - wh) + "px";
+  }
+}
+
+onclick = function(e) {
+  if(ctxStyle.transform == "scale(1)"){
+    ctxStyle.transform = "scale(0)";
+  }
+}
+
+window.onmousemove = function(e) {
+  if(ctxStyle.transform == "scale(0)"){
+    ctxStyle.top = e.y;
+    ctxStyle.left = e.x;
+  }
+}
+
+function copy() {
+  userInput.focus();
+  var text = window.getSelection().toString();
+  document.execCommand('copy');
+}
+function paste() {
+  userInput.focus();
+  navigator.clipboard.readText()
+  .then(text => {
+    text = text.toString();
+    var start = userInput.selectionStart;
+    var first = userInput.value.substring(0,start) + text;
+    var second = userInput.value.substring(start,userInput.length);
+    userInput.value = first + second;
+    userInput.selectionStart = start + text.length;
+    userInput.selectionEnd = start + text.length;
+  });
+}
+function cut() {
+  userInput.focus();
+  var text = window.getSelection().toString();
+  userInput.value = userInput.value.split(text).join("");
+}
+</script>
